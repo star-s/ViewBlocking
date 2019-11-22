@@ -21,7 +21,7 @@ public extension UIResponder {
 }
 
 @objc
-public protocol ProgressLocableApplicationDelegate: UIApplicationDelegate {
+public protocol ProgressLockableApplicationDelegate: UIApplicationDelegate {
     @objc
     optional func application(_ application: UIApplication, lockWhile progress: Progress, options: LockingOptions)
 }
@@ -30,7 +30,7 @@ public extension UIApplication {
     
     @objc
     override func lockWhile(_ progress: Progress, options: LockingOptions = []) {
-        if let delegate = delegate as? ProgressLocableApplicationDelegate, let delegateMethod = delegate.application(_:lockWhile:options:) {
+        if let delegate = delegate as? ProgressLockableApplicationDelegate, let delegateMethod = delegate.application(_:lockWhile:options:) {
             delegateMethod(self, progress, options)
         }
     }
