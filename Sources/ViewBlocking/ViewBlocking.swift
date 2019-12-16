@@ -14,7 +14,7 @@ extension NSObject {
     
     func setObservedProgress(_ progress: Progress, completionWork: @escaping @convention(block) () -> Void) {
         if progress.isFinished || progress.isCancelled {
-            DispatchQueue.main.sync(execute: completionWork)
+            DispatchQueue.main.async(execute: completionWork)
         } else {
             let observer = ProgressObserver()
             observer.progress = progress
