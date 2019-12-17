@@ -17,9 +17,11 @@ final class ProgressObserver: NSObject {
             finishObservation = nil
             cancelObservation = nil
             guard let progress = newValue else { return }
-            let changeHandler: (Progress, NSKeyValueObservedChange<Bool>) -> Void = { [unowned self] (obj, change) in
+            let changeHandler: (Progress, NSKeyValueObservedChange<Bool>) -> Void = { [weak self] (obj, change) in
                 if change.newValue ?? false {
-                    DispatchQueue.main.async { self.performCompletionWork() }
+                    if let strongSelf = self {
+                        DispatchQueue.main.async { strongSelf.performCompletionWork() }
+                    }
                 }
             }
             finishObservation = progress.observe(\.isFinished, options: [.new], changeHandler: changeHandler)
