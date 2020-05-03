@@ -8,9 +8,9 @@
 #if canImport(UIKit)
 import UIKit
 
-public extension UIRefreshControl {
+extension UIRefreshControl {
     
-    func endRefreshingAfterFinish(_ progress: Progress) {
+    public func endRefreshingAfterFinish(_ progress: Progress) {
         setObservedProgress(progress) { [weak self] in
             self?.endRefreshing()
         }

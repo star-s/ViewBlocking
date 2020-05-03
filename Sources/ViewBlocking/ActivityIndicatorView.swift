@@ -8,9 +8,9 @@
 #if canImport(UIKit)
 import UIKit
 
-public extension UIActivityIndicatorView {
+extension UIActivityIndicatorView {
     
-    func animatingWhile(_ progress: Progress) {
+    public func animatingWhile(_ progress: Progress) {
         startAnimating()
         setObservedProgress(progress) { [weak self] in
             self?.stopAnimating()

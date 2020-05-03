@@ -8,9 +8,9 @@
 #if canImport(UIKit)
 import UIKit
 
-public extension UIBarItem {
+extension UIBarItem {
     
-    func disableWhile(_ progress: Progress) {
+    public func disableWhile(_ progress: Progress) {
         isEnabled = false
         setObservedProgress(progress) { [weak self] in
             self?.isEnabled = true

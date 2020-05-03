@@ -8,15 +8,11 @@
 #if canImport(UIKit)
 import UIKit
 
-public extension UIResponder {
+extension UIResponder {
 
     @objc
-    func lockWhile(_ progress: Progress, options: LockingOptions = []) {
-        if let next = next {
-            next.lockWhile(progress, options: options)
-        } else {
-            UIApplication.shared.lockWhile(progress, options: options)
-        }
+    open func lockWhile(_ progress: Progress, options: LockingOptions = []) {
+        (next ?? UIApplication.shared).lockWhile(progress, options: options)
     }
 }
 
@@ -26,13 +22,11 @@ public protocol ProgressLockableApplicationDelegate: UIApplicationDelegate {
     optional func application(_ application: UIApplication, lockWhile progress: Progress, options: LockingOptions)
 }
 
-public extension UIApplication {
+extension UIApplication {
     
     @objc
-    override func lockWhile(_ progress: Progress, options: LockingOptions = []) {
-        if let delegate = delegate as? ProgressLockableApplicationDelegate, let delegateMethod = delegate.application(_:lockWhile:options:) {
-            delegateMethod(self, progress, options)
-        }
+    override open func lockWhile(_ progress: Progress, options: LockingOptions = []) {
+        (delegate as? ProgressLockableApplicationDelegate)?.application?(self, lockWhile: progress, options: options)
     }
 }
 

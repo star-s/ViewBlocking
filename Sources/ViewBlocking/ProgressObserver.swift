@@ -9,23 +9,27 @@ import Foundation
 
 final class ProgressObserver: NSObject {
     
-    private var finishObservation: NSKeyValueObservation?
-    private var cancelObservation: NSKeyValueObservation?
+    private var observers = [NSKeyValueObservation]()
     
     var progress: Progress? {
         willSet {
-            finishObservation = nil
-            cancelObservation = nil
-            guard let progress = newValue else { return }
-            let changeHandler: (Progress, NSKeyValueObservedChange<Bool>) -> Void = { [weak self] (obj, change) in
-                if change.newValue ?? false {
-                    if let strongSelf = self {
-                        DispatchQueue.main.async { strongSelf.performCompletionWork() }
-                    }
-                }
+            guard let progress = newValue else {
+                observers.removeAll()
+                return
             }
-            finishObservation = progress.observe(\.isFinished, options: [.new], changeHandler: changeHandler)
-            cancelObservation = progress.observe(\.isCancelled, options: [.new], changeHandler: changeHandler)
+            let changeHandler: (Progress, NSKeyValueObservedChange<Bool>) -> Void = { [weak self] (obj, change) in
+                guard change.newValue ?? false else {
+                    return
+                }
+                guard let strongSelf = self else {
+                    return
+                }
+                DispatchQueue.main.async { strongSelf.performCompletionWork() }
+            }
+            observers = [
+                progress.observe(\.isFinished, options: [.new], changeHandler: changeHandler),
+                progress.observe(\.isCancelled, options: [.new], changeHandler: changeHandler)
+            ]
         }
     }
     

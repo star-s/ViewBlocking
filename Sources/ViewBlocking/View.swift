@@ -8,15 +8,15 @@
 #if canImport(UIKit)
 import UIKit
 
-public extension UIView {
+extension UIView {
     
-    func removeFromSuperviewAfterFinish(_ progress: Progress) {
+    public func removeFromSuperviewAfterFinish(_ progress: Progress) {
         setObservedProgress(progress) { [weak self] in
             self?.removeFromSuperview()
         }
     }
     
-    func hideWhile(_ progress: Progress) {
+    public func hideWhile(_ progress: Progress) {
         isHidden = true
         setObservedProgress(progress) { [weak self] in
             self?.isHidden = false
